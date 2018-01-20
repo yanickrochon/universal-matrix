@@ -1,0 +1,26 @@
+{
+  "name": "universal-matrix",
+  "description": "General purpose matrix library.",
+  "author": "Yanick Rochon <yanick.rochon@gmail.com>",
+  "version": "0.0.1",
+  "license": "MIT",
+  "keywords": [
+    "matrix"
+  ],
+  "main": "src/matrix.js",
+  "scripts": {
+    "test": "jest",
+    "test-cov": "npm run test -- --coverage"
+  },
+  "homepage": "https://github.com/yanickrochon/universal-matrix#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yanickrochon/universal-matrix.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yanickrochon/universal-matrix/issues"
+  },
+  "devDependencies": {
+    "jest": "^22.0.4"
+  }
+}

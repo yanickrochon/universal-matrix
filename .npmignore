@@ -1,0 +1,5 @@
+.circleci/
+coverage/
+test/
+.gitignore
+.travis.yml
