@@ -30,6 +30,30 @@ const matrix = new Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
 All methods are chainable and work directly on the matrix data (except for `clone`).
 
 
+### *[static]* Matrix.zero(rows[, cols])
+
+Create a zero matrix of size `rows * cols`, or a square matrix of size `rows * rows`.
+
+#### Arguments
+* **rows** *{Number}* : the number or rows
+* **cols** *{Number}* (optional) : the number of columns (equals to rows if not specified)
+
+#### Return
+* *{Matrix}* : a zero matrix of size `rows * columns`.
+
+#### Example
+```js
+const square = Matrix.zero(3);
+// 0  0  0
+// 0  0  0
+// 0  0  0
+
+const matrix = Matrix.zero(2, 4);
+// 0  0  0  0
+// 0  0  0  0
+```
+
+
 ### *[static]* Matrix.identity(n)
 
 Create an identity matrix of size `n * n`.
@@ -46,6 +70,33 @@ const matrix = Matrix.identity(3);
 // 1  0  0
 // 0  1  0
 // 0  0  1
+```
+
+
+### *[static]* Matrix.randomize(matrix[[, min][, max]])
+
+Randomize the given matrix data.
+
+#### Arguments
+* **matrix** *{Matrix}* : the matrix to randomize
+* **min** *{Number}* (optional) : the minimum value *(default `0`)*
+* **max** *{Number}* (optional) : the maximum value *(default `1`)*
+
+#### Return
+* *{Matrix}* : matrix instance for method chaining
+
+#### Example
+```js
+const matrices = [
+  // random matrix of size 3 x 3, with values between [0, 1[
+  Matrix.randomize(Matrix.zero(3)),
+
+  // random matrix of size 3 x 3, with values between [0, 10[
+  Matrix.randomize(Matrix.zero(3), 10),
+
+  // random matrix of size 3 x 3, with values between [-3, 5[
+  Matrix.randomize(Matrix.zero(3), -3, 5),
+];
 ```
 
 
@@ -69,28 +120,6 @@ Matrix.determinant(matrix);
 ```
 
 
-### *[static]* Matrix.inverse(matrix)
-
-Return the inverse matrix. The given matrix must be square, and contain at
-least 2 rows.
-
-#### Arguments
-* **matrix** *{Matrix}* : the matrix to get the inverse from
-
-#### Return
-* *{Matrix}* : the inverse matrix
-
-#### Example
-```js
-const matrix = new Matrix([3, 0, 2], [2, 0, -2], [0, 1, 1]);
-
-const inverse = Matrix.inverse(matrix);
-//  0.2   0.2   0
-// -0.2   0.3   1
-//  0.2  -0.3   0
-```
-
-
 ### *[constructor]* Matrix(...rows)
 
 Create a new matrix with the given row values. Every row must be of same
@@ -105,6 +134,166 @@ const matrix = new Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
 // 1  2  3
 // 4  5  6
 // 7  8  9
+
+matrix.rows;
+// 3
+
+matrix.columns;
+// 3
+
+matrix.data;
+// [1, 2, 3, 4, 5, 6, 7, 8, 9];
+```
+
+
+### matrix.get(row, col)
+
+Get the value from the matrix. The rows and columns are 0-based.
+
+#### arguments
+* **row** *{Number}* : the row from `0` to `matrix.rows - 1`
+* **col** *{Number}* : the column from `0` to `matrix.columns - 1`
+
+#### Return
+* *{Number}* : the matrix value
+
+#### Example
+```js
+const matrix = new Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+
+matrix.get(2, 0);
+// 7
+```
+
+
+### matrix.getRow(row)
+
+Get the entire row from the matrix. The rows are 0-based.
+
+#### arguments
+* **row** *{Number}* : the row from `0` to `matrix.rows - 1`
+
+#### Return
+* *{Array}* : the matrix row
+
+#### Example
+```js
+const matrix = new Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+
+matrix.getRow(2);
+// [7  8  9]
+```
+
+
+### matrix.getColumn(col)
+
+Get the entire column from the matrix. The columns are 0-based.
+
+#### arguments
+* **col** *{Number}* : the col from `0` to `matrix.columns - 1`
+
+#### Return
+* *{Array}* : the matrix column
+
+#### Example
+```js
+const matrix = new Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+
+matrix.getColumn(2);
+// [3, 6, 9]
+```
+
+
+### matrix.set(row, col, value)
+
+Set the value of the matrix. The rows and columns are 0-based.
+
+#### arguments
+* **row** *{Number}* : the row from `0` to `matrix.rows - 1`
+* **col** *{Number}* : the column from `0` to `matrix.columns - 1`
+* **value** *{Number}* : the value to set
+
+#### Return
+* *{Matrix}* : matrix instance for method chaining
+
+#### Example
+```js
+const matrix = new Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+
+matrix.set(2, 1, -88);
+//  1   2   3
+//  4   5   6
+//  7 -88   9
+```
+
+
+### matrix.setRow(row, data)
+
+Set the entire row of the matrix. The rows are 0-based.
+
+#### arguments
+* **row** *{Number}* : the row from `0` to `matrix.rows - 1`
+* **data** *{Array}* : an array of data having the same length as `matrix.columns`
+
+#### Return
+* *{Matrix}* : matrix instance for method chaining
+
+#### Example
+```js
+const matrix = new Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+
+matrix.setRow(2, [-9, -8, -7]);
+//  1   2   3
+//  4   5   6
+// -9  -8  -7
+```
+
+
+### matrix.setColumn(col, data)
+
+Set the entire column of the matrix. The columns are 0-based.
+
+#### arguments
+* **col** *{Number}* : the col from `0` to `matrix.columns - 1`
+* **data** *{Array}* : an array of data having the same length as `matrix.rows`
+
+#### Return
+* *{Matrix}* : matrix instance for method chaining
+
+#### Example
+```js
+const matrix = new Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9]);
+
+matrix.setColumn(2, [11, 12, 13]);
+//  1   2  11
+//  4   5  12
+//  7   8  13
+```
+
+
+### matrix.apply(fn)
+
+Apply a given function to the given values of the matrix. The function will
+receive three (3) arguments:
+
+* **val** *{Number}* : the matrix value to apply the function to
+* **row** *{Number}* : the current row in the Matrix
+* **col** *{Number}* : the current column in the matrix
+
+#### Arguments
+* **fn** *{Function}* : the function to call on each value
+
+#### Return
+* *{Matrix}* : matrix instance for method chaining
+
+#### Example
+```js
+const matrix = new Matrix([1, 2], [3, 4]);
+
+// matrix.apply(function (val) { return val * 2; });
+matrix.apply(val => val * 2);
+// 2  4
+// 6  8
 ```
 
 
@@ -261,6 +450,30 @@ matrix.transpose();
 //  1  4
 //  2  5
 //  3  6
+```
+
+
+### matrix.inverse()
+
+Return the inverse matrix. The matrix must be square, and contain at
+least 2 rows.
+
+#### Return
+* *{Matrix}* : matrix instance for method chaining
+
+#### Example
+```js
+const matrix = new Matrix([3, 0, 2], [2, 0, -2], [0, 1, 1]);
+
+matrix.inverse();
+//  0.2   0.2   0
+// -0.2   0.3   1
+//  0.2  -0.3   0
+
+matrix.inverse();
+//  3  0  2
+//  2  0 -2
+//  0  1  1
 ```
 
 

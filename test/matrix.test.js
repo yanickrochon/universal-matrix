@@ -29,6 +29,226 @@ describe('Testing Matrix', () => {
   });
 
 
+  describe('Testing getting values', () => {
+    it('should get values from the matrix', () => {
+      const a = new Matrix([1, 2], [3, 4]);
+
+      assert.strictEqual(a.get(0, 0), 1);
+      assert.strictEqual(a.get(0, 1), 2);
+      assert.strictEqual(a.get(1, 0), 3);
+      assert.strictEqual(a.get(1, 1), 4);
+    });
+
+    it('should fail getting value', () => {
+      const a = new Matrix([1, 2], [3, 4]);
+
+      [
+        void 0, null, NaN, Infinity, '', 'test',
+        [], {}, /./, new Date()
+      ].forEach(p => {
+        assert.throws(() => a.get(p, 0));
+        assert.throws(() => a.get(0, p));
+      });
+    });
+
+    it('should get row', () => {
+      const a = new Matrix([1, 2], [3, 4]);
+
+      assert.deepStrictEqual(a.getRow(0), [1, 2]);
+      assert.deepStrictEqual(a.getRow(1), [3, 4]);
+    });
+
+    it('should fail getting row with invalid value', () => {
+      const a = new Matrix([1, 2], [3, 4]);
+
+      [
+        void 0, null, NaN, Infinity, '', 'test',
+        [], {}, /./, new Date()
+      ].forEach(row => assert.throws(() => a.getRow(row)));
+    });
+
+    it('should get column', () => {
+      const a = new Matrix([1, 2], [3, 4]);
+
+      assert.deepStrictEqual(a.getColumn(0), [1, 3]);
+      assert.deepStrictEqual(a.getColumn(1), [2, 4]);
+    });
+
+    it('should fail getting column with invalid value', () => {
+      const a = new Matrix([1, 2], [3, 4]);
+
+      [
+        void 0, null, NaN, Infinity, '', 'test',
+        [], {}, /./, new Date()
+      ].forEach(col => assert.throws(() => a.getColumn(col)));
+    });
+  });
+
+
+  describe('Testing setting values', () => {
+    it('should set values to the matrix', () => {
+      const rows = 10;
+      const cols = 20;
+      const a = Matrix.zero(rows, cols);
+
+      for (let i = 0; i < 100; ++i) {
+        let row = (Math.random() * rows) | 0;
+        let col = (Math.random() * cols) | 0;
+        let value = (Math.random() * 100) - 50;
+
+        a.set(row, col, value);
+
+        assert.strictEqual(a.get(row, col), value);
+      }
+    });
+
+    it('should fail setting value', () => {
+      const rows = 10;
+      const cols = 20;
+      const a = Matrix.zero(rows, cols);
+
+      [
+        void 0, null, NaN, Infinity, '', 'test',
+        [], {}, /./, new Date()
+      ].forEach(p => {
+        assert.throws(() => a.set(p, 0, 0));
+        assert.throws(() => a.set(0, p, 0));
+        assert.throws(() => a.set(0, 0, p));
+      });
+    });
+
+    it('should set row', () => {
+      const rows = 2;
+      const cols = 3;
+      const a = Matrix.zero(rows, cols);
+
+      assert.deepStrictEqual(a.getRow(0), [0, 0, 0]);
+      assert.deepStrictEqual(a.getRow(1), [0, 0, 0]);
+
+      for (let i = 0; i < 100; ++i) {
+        const row = Array.apply(null, Array(cols)).map(Number.prototype.valueOf, (Math.random() * 100) - 50);
+
+        a.setRow(0, row);
+
+        assert.deepStrictEqual(a.getRow(0), row);
+        assert.deepStrictEqual(a.getRow(1), [0, 0, 0]);
+      }
+    });
+
+    it('should fail setting row with invalid data', () => {
+      const rows = 2;
+      const cols = 3;
+      const a = Matrix.zero(rows, cols);
+
+      assert.deepStrictEqual(a.getRow(0), [0, 0, 0]);
+      assert.deepStrictEqual(a.getRow(1), [0, 0, 0]);
+
+      [
+        void 0, null, NaN, Infinity, '', 'test',
+        [], {}, /./, new Date()
+      ].forEach(p => {
+        assert.throws(() => a.setRow(p, 0, [0, 0, 0]));
+        assert.throws(() => a.setRow(0, p, [0, 0, 0]));
+      });
+
+      [
+        void 0, null, NaN, Infinity, '', 'test',
+        {}, /./, new Date(),
+        [], [0], [0, 0], [0, 0, 0, 0]
+      ].forEach(row => {
+        assert.throws(() => a.setRow(0, 0, row));
+        assert.throws(() => a.setRow(0, 0, [0, 0, row]));
+      });
+    });
+
+    it('should set column', () => {
+      const rows = 3;
+      const cols = 2;
+      const a = Matrix.zero(rows, cols);
+
+      assert.deepStrictEqual(a.getColumn(0), [0, 0, 0]);
+      assert.deepStrictEqual(a.getColumn(1), [0, 0, 0]);
+
+      for (let i = 0; i < 100; ++i) {
+        const col = Array.apply(null, Array(rows)).map(Number.prototype.valueOf, (Math.random() * 100) - 50);
+
+        a.setColumn(0, col);
+
+        assert.deepStrictEqual(a.getColumn(0), col);
+        assert.deepStrictEqual(a.getColumn(1), [0, 0, 0]);
+      }
+    });
+
+    it('should fail setting column with invalid data', () => {
+      const rows = 3;
+      const cols = 2;
+      const a = Matrix.zero(rows, cols);
+
+      assert.deepStrictEqual(a.getColumn(0), [0, 0, 0]);
+      assert.deepStrictEqual(a.getColumn(1), [0, 0, 0]);
+
+      [
+        void 0, null, NaN, Infinity, '', 'test',
+        [], {}, /./, new Date()
+      ].forEach(p => {
+        assert.throws(() => a.setColumn(p, 0, [0, 0, 0]));
+        assert.throws(() => a.setColumn(0, p, [0, 0, 0]));
+      });
+
+      [
+        void 0, null, NaN, Infinity, '', 'test',
+        {}, /./, new Date(),
+        [], [0], [0, 0], [0, 0, 0, 0]
+      ].forEach(row => {
+        assert.throws(() => a.setColumn(0, 0, row));
+        assert.throws(() => a.setColumn(0, 0, [0, 0, row]));
+      });
+    });
+  });
+
+
+  describe('Testing apply function', () => {
+    it('should apply function', () => {
+      const a = new Matrix([1, 2], [3, 4]);
+      const fn = function (val, row, col) {
+        switch (val) {
+          case 1:
+            assert.strictEqual(row, 0);
+            assert.strictEqual(col, 0);
+            break;
+          case 2:
+            assert.strictEqual(row, 0);
+            assert.strictEqual(col, 1);
+            break;
+          case 3:
+            assert.strictEqual(row, 1);
+            assert.strictEqual(col, 0);
+            break;
+          default:
+            assert.strictEqual(row, 1);
+            assert.strictEqual(col, 1);
+            break;
+        }
+
+        return val * 2;
+      };
+      const expected = [2, 4, 6, 8];
+
+      a.apply(fn);
+      assert.deepStrictEqual(a.data, expected);
+    });
+
+    it('should fail when not a function', () => {
+      const a = new Matrix([1, 2], [3, 4]);
+
+      [
+        void 0, null, NaN, Infinity,
+        '', 'test', [], {}, /./, new Date()
+      ].forEach(fn => assert.throws(() => a.apply(fn)));
+    });
+  });
+
+
   describe('Testing matrix addition', () => {
     it('should pass scalar addition', () => {
       const a = new Matrix([1, 3, 1], [1, 0, 0]);
@@ -233,6 +453,95 @@ describe('Testing Matrix', () => {
   });
 
 
+  describe('Testing zero matrix', () => {
+    it('should create zero matrices', () => {
+      for (let i = 0, matrix, rows, cols, expcted; i < 10000; ++i) {
+        rows = ((Math.random() * 10) | 0) + 1;
+        cols = ((Math.random() * 10) | 0) + 1;
+        matrix = Matrix.zero(rows, cols);
+        expected = new Array(rows * cols).fill(0);
+
+        assert.strictEqual(matrix.rows, rows);
+        assert.strictEqual(matrix.columns, cols);
+        assert.deepStrictEqual(matrix.data, expected);
+      }
+    });
+
+    it('should fail with invalid rows', () => {
+      [
+        void 0, null, NaN, Infinity, '', 'test',
+        [], {}, /./, new Date(), -2, -1, 0
+      ].forEach(rows => assert.throws(() => Matrix.zero(rows, 3)));
+    });
+
+    it('should fail with invalid columns', () => {
+      [
+        void 0, null, NaN, Infinity, '', 'test',
+        [], {}, /./, new Date(), -2, -1, 0
+      ].forEach(cols => assert.throws(() => Matrix.zero(3, cols)));
+    });
+  });
+
+
+  describe('Testing random matrix', () => {
+    it('should randomize matrix with default boundaries', () => {
+      for (let i = 0, matrix; i < 100; ++i) {
+        matrix = Matrix.randomize(Matrix.zero(10));
+
+        matrix.data.forEach(v => {
+          assert.ok( v >= 0 );
+          assert.ok( v <= 1 );
+        });
+      }
+    });
+
+    it('should randomize matrix with upper bound', () => {
+      for (let i = 0, matrix, max; i < 1; ++i) {
+        max = Math.random() * 1000;
+        matrix = Matrix.randomize(Matrix.zero(10), max);
+
+        matrix.data.forEach(v => {
+          assert.ok( v >= 0 );
+          assert.ok( v <= max );
+        });
+      }
+    });
+
+    it('should randomize matrix with lower and upper bounds', () => {
+      for (let i = 0, matrix, min, max; i < 1; ++i) {
+        min = (Math.random() * 1000) - 500;
+        max = min + (Math.random() * 1000);
+        matrix = Matrix.randomize(Matrix.zero(10), min, max);
+
+        matrix.data.forEach(v => {
+          assert.ok( v >= min );
+          assert.ok( v <= max );
+        });
+      }
+    });
+
+    it('should swap min/max bounds if necessary', () => {
+      for (let i = 0, matrix, min, max; i < 1; ++i) {
+        min = (Math.random() * 1000) - 500;
+        max = min + (Math.random() * 1000);
+        matrix = Matrix.randomize(Matrix.zero(10), max, min);
+
+        matrix.data.forEach(v => {
+          assert.ok( v >= min );
+          assert.ok( v <= max );
+        });
+      }
+    });
+
+    it('should fail for invalid matrix values', () => {
+      [
+        void 0, null, NaN, Infinity, 0, 1,
+        '', 'test', new Date(), /./, () => {}, [], {}
+      ].forEach(m => assert.throws(() => Matrix.randomize(m)));
+    });
+  });
+
+
   describe('Testing identity matrix', () => {
 
     it('should create identity matrix', () => {
@@ -292,14 +601,13 @@ describe('Testing Matrix', () => {
         new Matrix([1]), new Matrix([1, 2]), new Matrix([1], [2])
       ].forEach(m => assert.throws(() => Matrix.determinant(m)));
     });
-
   });
 
 
   describe('Testing inverse matrix', () => {
     it('should find inverse for 2x2', () => {
       const a = new Matrix([4, 7], [2, 6]);
-      const a1 = Matrix.inverse(a);
+      const a1 = a.clone().inverse();
       const expected = [0.6, -0.7, -0.2, 0.4];
 
       a1.data.forEach((v, i) => assert.ok( Math.abs(v - expected[i]) < 0.0001 ));
@@ -307,7 +615,7 @@ describe('Testing Matrix', () => {
 
     it('should find inverse for 3x3', () => {
       const a = new Matrix([3, 0, 2], [2, 0, -2], [0, 1, 1]);
-      const a1 = Matrix.inverse(a);
+      const a1 = a.clone().inverse();
       const expected = [0.2, 0.2, 0, -0.2, 0.3, 1, 0.2, -0.3, 0];
 
       a1.data.forEach((v, i) => assert.ok( Math.abs(v - expected[i]) < 0.0001 ));
@@ -315,7 +623,7 @@ describe('Testing Matrix', () => {
 
     it('should find inverse for 5x5', () => {
       const a = new Matrix( [3, 0, 0, 0, 0], [2, -6, 0, 0, 0], [17, 14, 2, 0, 0], [22, -2, 15, 8, 0], [43, 12, 1, -1, 5] );
-      const a1 = Matrix.inverse(a);
+      const a1 = a.clone().inverse();
       const expected = [    1 /  3,     0,         0,      0,      0,
                             1 /  9,    -1 / 6,     0,      0,      0,
                           -65 / 18,     7 / 6,     1 / 2,  0,      0,
@@ -327,15 +635,14 @@ describe('Testing Matrix', () => {
 
     it('should be reciprocal', () => {
       const a = new Matrix([0, -2, 8], [-0.3, 1, 0], [0, 0, 1]);
-      const a1 = Matrix.inverse(a);
-      const a2 = Matrix.inverse(a1);
+      const a1 = a.clone().inverse().inverse();
 
-      a2.data.forEach((v, i) => assert.ok( Math.abs(v - a.data[i]) < 0.0001 ));
+      a1.data.forEach((v, i) => assert.ok( Math.abs(v - a.data[i]) < 0.0001 ));
     });
 
     it('should return undefined when determinant is 0', () => {
       const a = new Matrix([2, 1], [6, 3]);
-      const a1 = Matrix.inverse(a);
+      const a1 = a.clone().inverse();
 
       assert.strictEqual( a1, undefined );
     });

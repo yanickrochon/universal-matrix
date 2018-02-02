@@ -2,7 +2,7 @@
   "name": "universal-matrix",
   "description": "General purpose matrix library.",
   "author": "Yanick Rochon <yanick.rochon@gmail.com>",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "license": "MIT",
   "keywords": [
     "matrix"
@@ -21,6 +21,6 @@
     "url": "https://github.com/yanickrochon/universal-matrix/issues"
   },
   "devDependencies": {
-    "jest": "^22.0.4"
+    "jest": "^22.1.4"
   }
 }
